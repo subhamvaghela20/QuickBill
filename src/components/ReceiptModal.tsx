@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   shareBtn: {
     flex: 1,
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     borderRadius: 12,
     paddingVertical: 12,
     flexDirection: 'row',

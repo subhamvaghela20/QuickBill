@@ -174,12 +174,12 @@ export const ProductsScreen: React.FC = () => {
               activeOpacity={0.7}
             >
               <View style={styles.productIcon}>
-                <Ionicons name="basket-outline" size={20} color="#2563eb" />
+                <Ionicons name="basket-outline" size={20} color="#0f172a" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.productName}>{item.name}</Text>
                 <Text style={styles.categoryText}>
-                  {item.category || 'General'} • Unit: <Text style={{ fontWeight: '700', color: '#2563eb' }}>{item.unit || 'kg'}</Text>
+                  {item.category || 'General'} • Unit: <Text style={{ fontWeight: '700', color: '#0f172a' }}>{item.unit || 'kg'}</Text>
                 </Text>
                 {item.defaultRatePerKg ? (
                   <Text style={styles.rateText}>
@@ -197,14 +197,14 @@ export const ProductsScreen: React.FC = () => {
                 style={styles.actionBtn}
                 onPress={() => setInspectProduct(item)}
               >
-                <Ionicons name="trending-up" size={17} color="#2563eb" />
+                <Ionicons name="trending-up" size={17} color="#0f172a" />
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.actionBtn}
                 onPress={() => handleOpenEdit(item)}
               >
-                <Ionicons name="pencil-outline" size={17} color="#0284c7" />
+                <Ionicons name="pencil-outline" size={17} color="#475569" />
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
   addBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     height: 44,
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
-    paddingBottom: 30,
+    paddingBottom: 120,
   },
   productCard: {
     flexDirection: 'row',
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -717,8 +717,8 @@ const styles = StyleSheet.create({
     borderColor: '#cbd5e1',
   },
   unitPillActive: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#2563eb',
+    backgroundColor: '#0f172a',
+    borderColor: '#0f172a',
   },
   unitPillText: {
     fontSize: 12,
@@ -726,7 +726,7 @@ const styles = StyleSheet.create({
     color: '#475569',
   },
   unitPillTextActive: {
-    color: '#1d4ed8',
+    color: '#ffffff',
     fontWeight: '700',
   },
   categoryPills: {
@@ -744,8 +744,8 @@ const styles = StyleSheet.create({
     borderColor: '#e2e8f0',
   },
   catPillActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: '#0f172a',
+    borderColor: '#0f172a',
   },
   catPillText: {
     fontSize: 12,
@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   saveProdBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 10,

@@ -98,12 +98,12 @@ export const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
               style={styles.quickAddBanner}
               onPress={() => handleQuickAddAndSelect(searchQuery)}
             >
-              <Ionicons name="add-circle" size={22} color="#2563eb" />
+              <Ionicons name="add-circle" size={22} color="#0f172a" />
               <View style={{ flex: 1 }}>
                 <Text style={styles.quickAddTitle}>Add "{searchQuery.trim()}" as new product</Text>
                 <Text style={styles.quickAddSubtitle}>Tap here to add to catalog & select</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color="#2563eb" />
+              <Ionicons name="chevron-forward" size={18} color="#0f172a" />
             </TouchableOpacity>
           )}
 
@@ -123,7 +123,7 @@ export const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
                 }}
               >
                 <View style={styles.productIconBg}>
-                  <Ionicons name="pricetag-outline" size={18} color="#2563eb" />
+                  <Ionicons name="pricetag-outline" size={18} color="#0f172a" />
                 </View>
                 <View style={styles.productInfo}>
                   <Text style={styles.productName}>{item.name}</Text>
@@ -214,9 +214,9 @@ const styles = StyleSheet.create({
   quickAddBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     borderWidth: 1,
-    borderColor: '#bfdbfe',
+    borderColor: '#cbd5e1',
     marginHorizontal: 20,
     marginTop: 10,
     padding: 12,
@@ -226,11 +226,11 @@ const styles = StyleSheet.create({
   quickAddTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1d4ed8',
+    color: '#0f172a',
   },
   quickAddSubtitle: {
     fontSize: 11,
-    color: '#3b82f6',
+    color: '#475569',
   },
   listContent: {
     paddingHorizontal: 20,
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,

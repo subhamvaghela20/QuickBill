@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import { Bill, BillItem, Product } from '../types';
 import {
@@ -34,6 +35,7 @@ import { DatePickerModal } from '../components/DatePickerModal';
 import { BillPhotoModal } from '../components/BillPhotoModal';
 
 export const NewBillScreen: React.FC = () => {
+  const insets = useSafeAreaInsets();
   const { getPreviousRate, saveNewBill, addProduct, setActiveDraftBillCount } = useApp();
 
   // Date selection state
@@ -240,7 +242,10 @@ export const NewBillScreen: React.FC = () => {
       style={styles.container}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom, 16) + 160 },
+        ]}
         keyboardShouldPersistTaps="handled"
       >
         {/* Date Selector Banner */}
@@ -250,7 +255,7 @@ export const NewBillScreen: React.FC = () => {
             onPress={() => setIsDatePickerVisible(true)}
             activeOpacity={0.7}
           >
-            <Ionicons name="calendar" size={18} color="#2563eb" />
+            <Ionicons name="calendar" size={18} color="#0f172a" />
             <Text style={styles.dateLabel}>Date:</Text>
             <Text style={styles.dateValue}>{formatDate(billDate)}</Text>
           </TouchableOpacity>
@@ -276,7 +281,7 @@ export const NewBillScreen: React.FC = () => {
               style={styles.customDateBtn}
               onPress={() => setIsDatePickerVisible(true)}
             >
-              <Ionicons name="calendar-outline" size={14} color="#2563eb" />
+              <Ionicons name="calendar-outline" size={14} color="#0f172a" />
               <Text style={styles.customDateText}>Pick Date</Text>
             </TouchableOpacity>
           </View>
@@ -296,7 +301,7 @@ export const NewBillScreen: React.FC = () => {
               <Ionicons
                 name="calculator-outline"
                 size={14}
-                color={inputMode === 'rate' ? '#2563eb' : '#64748b'}
+                color={inputMode === 'rate' ? '#0f172a' : '#64748b'}
               />
               <Text
                 style={[
@@ -318,7 +323,7 @@ export const NewBillScreen: React.FC = () => {
               <Ionicons
                 name="receipt-outline"
                 size={14}
-                color={inputMode === 'total' ? '#2563eb' : '#64748b'}
+                color={inputMode === 'total' ? '#0f172a' : '#64748b'}
               />
               <Text
                 style={[
@@ -336,7 +341,7 @@ export const NewBillScreen: React.FC = () => {
             style={styles.productPickerButton}
             onPress={() => setSearchModalVisible(true)}
           >
-            <Ionicons name="basket" size={20} color="#2563eb" />
+            <Ionicons name="basket" size={20} color="#0f172a" />
             <View style={{ flex: 1 }}>
               <Text style={styles.pickerLabel}>Product</Text>
               <Text style={styles.pickerValue}>
@@ -351,7 +356,7 @@ export const NewBillScreen: React.FC = () => {
             <View style={styles.productMetaInfoRow}>
               {previousHistory ? (
                 <View style={styles.productHistoryBadge}>
-                  <Ionicons name="time-outline" size={13} color="#2563eb" />
+                  <Ionicons name="time-outline" size={13} color="#0f172a" />
                   <Text style={styles.productHistoryText}>
                     Last Bill Rate:{' '}
                     <Text style={styles.productHistoryBold}>
@@ -494,7 +499,7 @@ export const NewBillScreen: React.FC = () => {
               style={styles.fetchPhotoBtn}
               onPress={() => setBillPhotoModalVisible(true)}
             >
-              <Ionicons name="camera" size={18} color="#2563eb" />
+              <Ionicons name="camera" size={18} color="#0f172a" />
               <Text style={styles.fetchPhotoBtnText}>Fetch Photo & Bill</Text>
             </TouchableOpacity>
           </View>
@@ -535,7 +540,7 @@ export const NewBillScreen: React.FC = () => {
 
       {/* Floating Bottom Bill Summary & Save Bar */}
       {billItems.length > 0 && (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) + 8 }]}>
           <View style={styles.summaryTotals}>
             <Text style={styles.summaryWeightText}>
               {billItems.length} {billItems.length === 1 ? 'item' : 'items'} in bill
@@ -630,7 +635,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f5f9',
   },
   dateChipActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
   },
   dateChipText: {
     fontSize: 12,
@@ -698,7 +703,8 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   modeTabTextActive: {
-    color: '#2563eb',
+    color: '#0f172a',
+    fontWeight: '700',
   },
   productPickerButton: {
     flexDirection: 'row',
@@ -717,23 +723,23 @@ const styles = StyleSheet.create({
   productHistoryBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
     gap: 6,
     borderWidth: 1,
-    borderColor: '#dbeafe',
+    borderColor: '#e2e8f0',
     flexWrap: 'wrap',
   },
   productHistoryText: {
     fontSize: 12,
-    color: '#1e40af',
+    color: '#0f172a',
     flexShrink: 1,
   },
   productHistoryBold: {
     fontWeight: '700',
-    color: '#1e3a8a',
+    color: '#0f172a',
   },
   productNewBadge: {
     flexDirection: 'row',
@@ -832,11 +838,11 @@ const styles = StyleSheet.create({
     color: '#334155',
   },
   calculationPreviewBox: {
-    backgroundColor: '#f0f9ff',
+    backgroundColor: '#f8fafc',
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#bae6fd',
+    borderColor: '#cbd5e1',
     marginBottom: 14,
   },
   calcPreviewRow: {
@@ -847,29 +853,29 @@ const styles = StyleSheet.create({
   previewCalcText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0369a1',
+    color: '#0f172a',
   },
   previewSubRate: {
     fontSize: 12,
-    color: '#0284c7',
+    color: '#475569',
     marginTop: 2,
   },
   previewTotalAmount: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#0284c7',
+    color: '#0f172a',
   },
   calcDiffBanner: {
     marginTop: 10,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#e0f2fe',
+    borderTopColor: '#e2e8f0',
     gap: 4,
   },
   calcDiffBannerLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#075985',
+    color: '#475569',
     marginBottom: 2,
   },
   itemActionButtonsRow: {
@@ -879,7 +885,7 @@ const styles = StyleSheet.create({
   },
   addItemBtn: {
     flex: 1,
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -894,9 +900,9 @@ const styles = StyleSheet.create({
   },
   fetchPhotoBtn: {
     flex: 1.25,
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     borderWidth: 1.5,
-    borderColor: '#bfdbfe',
+    borderColor: '#cbd5e1',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -905,7 +911,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   fetchPhotoBtnText: {
-    color: '#1d4ed8',
+    color: '#0f172a',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -1049,7 +1055,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   customDateConfirm: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 10,

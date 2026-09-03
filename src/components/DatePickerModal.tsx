@@ -150,7 +150,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
               <Text style={styles.selectedDateBanner}>{formattedSelected}</Text>
             </View>
             <TouchableOpacity onPress={handleSetToday} style={styles.todayBtn}>
-              <Ionicons name="today-outline" size={16} color="#2563eb" />
+              <Ionicons name="today-outline" size={16} color="#0f172a" />
               <Text style={styles.todayBtnText}>Today</Text>
             </TouchableOpacity>
           </View>
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   todayBtnText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#2563eb',
+    color: '#0f172a',
   },
   monthNav: {
     flexDirection: 'row',
@@ -328,10 +328,10 @@ const styles = StyleSheet.create({
   },
   todayCell: {
     borderWidth: 1.5,
-    borderColor: '#2563eb',
+    borderColor: '#0f172a',
   },
   selectedCell: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
   },
   dayText: {
     fontSize: 14,
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     color: '#1e293b',
   },
   todayText: {
-    color: '#2563eb',
+    color: '#0f172a',
     fontWeight: '700',
   },
   selectedDayText: {
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   confirmBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 10,

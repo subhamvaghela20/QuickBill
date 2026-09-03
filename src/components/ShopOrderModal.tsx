@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import { Product, PurchaseOrder, PurchaseOrderItem } from '../types';
 import { formatDate, formatQuantityWithUnit, formatWeight, getTodayDateString } from '../utils/formatters';
@@ -29,6 +30,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
   onClose,
   orderToEdit,
 }) => {
+  const insets = useSafeAreaInsets();
   const { purchaseOrders, savePurchaseOrder, updatePurchaseOrder } = useApp();
 
   const [orderItems, setOrderItems] = useState<PurchaseOrderItem[]>([]);
@@ -270,7 +272,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
               style={styles.loadPreviousBtn}
               onPress={() => setHistoryPickerVisible(true)}
             >
-              <Ionicons name="time-outline" size={18} color="#2563eb" />
+              <Ionicons name="time-outline" size={18} color="#0f172a" />
               <View style={{ flex: 1 }}>
                 <Text style={styles.loadPreviousTitle}>
                   Select Previous Purchase History
@@ -279,7 +281,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
                   Autofill previous order & just update units
                 </Text>
               </View>
-              <Ionicons name="chevron-down" size={18} color="#2563eb" />
+              <Ionicons name="chevron-down" size={18} color="#0f172a" />
             </TouchableOpacity>
           )}
 
@@ -289,7 +291,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
               style={styles.datePickerTrigger}
               onPress={() => setDatePickerVisible(true)}
             >
-              <Ionicons name="calendar-outline" size={16} color="#2563eb" />
+              <Ionicons name="calendar-outline" size={16} color="#0f172a" />
               <Text style={styles.datePickerText}>{formatDate(orderDate)}</Text>
             </TouchableOpacity>
 
@@ -311,7 +313,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
               style={styles.productPickerBtn}
               onPress={() => setProductPickerVisible(true)}
             >
-              <Ionicons name="basket-outline" size={20} color="#2563eb" />
+              <Ionicons name="basket-outline" size={20} color="#0f172a" />
               <View style={{ flex: 1 }}>
                 <Text style={styles.pickerLabel}>Product</Text>
                 <Text style={styles.pickerValue}>
@@ -446,7 +448,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
           />
 
           {/* Bottom Bar: Save & WhatsApp Share Actions */}
-          <View style={styles.footer}>
+          <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) + 6 }]}>
             <View style={styles.footerSummary}>
               <Text style={styles.footerCount}>{orderItems.length} items</Text>
               <Text style={styles.footerWeight}>Total: {formatWeight(totalWeight)}</Text>
@@ -462,7 +464,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
                 onPress={handleSaveOrderOnly}
                 disabled={orderItems.length === 0}
               >
-                <Ionicons name="save-outline" size={18} color="#2563eb" />
+                <Ionicons name="save-outline" size={18} color="#0f172a" />
                 <Text style={styles.saveBtnText}>
                   {activeOrderId ? 'Update' : 'Save'}
                 </Text>
@@ -540,7 +542,7 @@ export const ShopOrderModal: React.FC<ShopOrderModalProps> = ({
                       </View>
                       <View style={styles.loadBtnPill}>
                         <Text style={styles.loadBtnPillText}>Autofill</Text>
-                        <Ionicons name="arrow-forward" size={14} color="#2563eb" />
+                        <Ionicons name="arrow-forward" size={14} color="#0f172a" />
                       </View>
                     </TouchableOpacity>
                   )}
@@ -564,6 +566,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+    maxHeight: '94%',
     height: '92%',
     paddingTop: 16,
   },
@@ -597,24 +600,24 @@ const styles = StyleSheet.create({
   loadPreviousBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     marginHorizontal: 20,
     marginTop: 10,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#bfdbfe',
+    borderColor: '#e2e8f0',
     gap: 10,
   },
   loadPreviousTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#1d4ed8',
+    color: '#0f172a',
   },
   loadPreviousSubtitle: {
     fontSize: 11,
-    color: '#3b82f6',
+    color: '#475569',
   },
   metaRow: {
     flexDirection: 'row',
@@ -719,7 +722,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   addBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -878,9 +881,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   saveBtn: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     borderWidth: 1,
-    borderColor: '#bfdbfe',
+    borderColor: '#cbd5e1',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,
@@ -889,7 +892,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   saveBtnText: {
-    color: '#2563eb',
+    color: '#0f172a',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -965,7 +968,7 @@ const styles = StyleSheet.create({
   historyOrderNumber: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#2563eb',
+    color: '#0f172a',
   },
   historyOrderDate: {
     fontSize: 12,
@@ -985,15 +988,17 @@ const styles = StyleSheet.create({
   loadBtnPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
     gap: 4,
   },
   loadBtnPillText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#2563eb',
+    color: '#0f172a',
   },
 });

@@ -227,7 +227,7 @@ export const BillPhotoModal: React.FC<BillPhotoModalProps> = ({
           <View style={styles.header}>
             <View>
               <View style={styles.titleRow}>
-                <Ionicons name="scan-circle" size={24} color="#2563eb" />
+                <Ionicons name="scan-circle" size={24} color="#0f172a" />
                 <Text style={styles.title}>Scan Bill Photo</Text>
               </View>
               <Text style={styles.subtitle}>
@@ -258,7 +258,7 @@ export const BillPhotoModal: React.FC<BillPhotoModalProps> = ({
                 </View>
               ) : (
                 <View style={styles.captureBox}>
-                  <Ionicons name="receipt-outline" size={44} color="#3b82f6" />
+                  <Ionicons name="receipt-outline" size={44} color="#0f172a" />
                   <Text style={styles.captureTitle}>Upload Physical Bill</Text>
                   <Text style={styles.captureDesc}>
                     Take a clear photo of your paper slip or computerized bill
@@ -269,7 +269,7 @@ export const BillPhotoModal: React.FC<BillPhotoModalProps> = ({
                       <Text style={styles.cameraBtnText}>Camera</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.galleryBtn} onPress={handlePickFromGallery}>
-                      <Ionicons name="images-outline" size={18} color="#2563eb" />
+                      <Ionicons name="images-outline" size={18} color="#0f172a" />
                       <Text style={styles.galleryBtnText}>Gallery</Text>
                     </TouchableOpacity>
                   </View>
@@ -298,7 +298,7 @@ export const BillPhotoModal: React.FC<BillPhotoModalProps> = ({
                 <View style={styles.keyInputCard}>
                   <Text style={styles.keyDesc}>
                     Powered by Google Gemini Vision. Get a free API key instantly at{' '}
-                    <Text style={{ fontWeight: '700', color: '#2563eb' }}>aistudio.google.com</Text>
+                    <Text style={{ fontWeight: '700', color: '#0f172a' }}>aistudio.google.com</Text>
                   </Text>
                   <View style={styles.keyInputRow}>
                     <TextInput
@@ -353,7 +353,7 @@ export const BillPhotoModal: React.FC<BillPhotoModalProps> = ({
                     </Text>
                   </View>
                   <TouchableOpacity style={styles.addLineBtn} onPress={handleAddNewItemRow}>
-                    <Ionicons name="add" size={16} color="#2563eb" />
+                    <Ionicons name="add" size={16} color="#0f172a" />
                     <Text style={styles.addLineBtnText}>Add Row</Text>
                   </TouchableOpacity>
                 </View>
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: '#bfdbfe',
+    borderColor: '#cbd5e1',
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
   cameraBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 10,
@@ -539,16 +539,16 @@ const styles = StyleSheet.create({
   galleryBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     borderWidth: 1,
-    borderColor: '#bfdbfe',
+    borderColor: '#cbd5e1',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 10,
     gap: 6,
   },
   galleryBtnText: {
-    color: '#2563eb',
+    color: '#0f172a',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -650,7 +650,7 @@ const styles = StyleSheet.create({
     color: '#7c3aed',
   },
   startScanBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -658,9 +658,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
     marginBottom: 16,
-    shadowColor: '#2563eb',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -694,16 +694,18 @@ const styles = StyleSheet.create({
   addLineBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
     gap: 4,
   },
   addLineBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#2563eb',
+    color: '#0f172a',
   },
   tableHeaderRow: {
     flexDirection: 'row',

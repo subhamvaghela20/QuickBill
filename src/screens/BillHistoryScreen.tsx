@@ -148,7 +148,7 @@ export const BillHistoryScreen: React.FC = () => {
           <Ionicons
             name={activeSubTab === 'bills' ? 'receipt' : 'receipt-outline'}
             size={16}
-            color={activeSubTab === 'bills' ? '#2563eb' : '#64748b'}
+            color={activeSubTab === 'bills' ? '#0f172a' : '#64748b'}
           />
           <Text
             style={[
@@ -215,7 +215,7 @@ export const BillHistoryScreen: React.FC = () => {
             >
               <View style={styles.cardHeader}>
                 <View style={styles.billNumberBadge}>
-                  <Ionicons name="receipt-outline" size={14} color="#2563eb" />
+                  <Ionicons name="receipt-outline" size={14} color="#0f172a" />
                   <Text style={styles.billNumberText}>{item.billNumber}</Text>
                 </View>
                 <View style={styles.dateContainer}>
@@ -255,7 +255,7 @@ export const BillHistoryScreen: React.FC = () => {
 
                   <View style={styles.viewBtn}>
                     <Text style={styles.viewBtnText}>View Receipt</Text>
-                    <Ionicons name="chevron-forward" size={14} color="#2563eb" />
+                    <Ionicons name="chevron-forward" size={14} color="#0f172a" />
                   </View>
                 </View>
               </View>
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   subTabTextActive: {
-    color: '#2563eb',
+    color: '#0f172a',
     fontWeight: '700',
   },
   subTabTextActiveGreen: {
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
   billCard: {
     backgroundColor: '#ffffff',
@@ -482,16 +482,18 @@ const styles = StyleSheet.create({
   billNumberBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
     gap: 4,
   },
   billNumberText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#1d4ed8',
+    color: '#0f172a',
   },
   poNumberBadge: {
     flexDirection: 'row',
@@ -613,16 +615,18 @@ const styles = StyleSheet.create({
   viewBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
     gap: 2,
   },
   viewBtnText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#2563eb',
+    color: '#0f172a',
   },
   emptyContainer: {
     alignItems: 'center',

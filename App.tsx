@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { AppProvider, useApp } from './src/context/AppContext';
@@ -66,12 +66,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 type Tab = 'new_bill' | 'history' | 'products';
 
 function MainContent() {
+  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<Tab>('new_bill');
   const [isShopOrderVisible, setIsShopOrderVisible] = useState(false);
   const { activeDraftBillCount } = useApp();
 
   // Lift floating button when bill bottom bar (Save Bill) is visible to prevent overlap
   const isLifted = activeTab === 'new_bill' && activeDraftBillCount > 0;
+  const safeBottomOffset = isLifted
+    ? Math.max(insets.bottom, 16) + 88
+    : Math.max(insets.bottom, 16) + 24;
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
@@ -98,64 +102,69 @@ function MainContent() {
         </View>
       </View>
 
-      {/* Tab Navigation Buttons */}
-      <View style={styles.tabNav}>
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'new_bill' && styles.tabButtonActive]}
-          onPress={() => setActiveTab('new_bill')}
-        >
-          <Ionicons
-            name={activeTab === 'new_bill' ? 'create' : 'create-outline'}
-            size={18}
-            color={activeTab === 'new_bill' ? '#2563eb' : '#64748b'}
-          />
-          <Text
-            style={[
-              styles.tabButtonText,
-              activeTab === 'new_bill' && styles.tabButtonTextActive,
-            ]}
+      {/* Tab Navigation Buttons (Android Standard Glass Capsule Switcher) */}
+      <View style={styles.tabNavContainer}>
+        <View style={styles.glassTabBar}>
+          <TouchableOpacity
+            style={[styles.glassTabItem, activeTab === 'new_bill' && styles.glassTabItemActive]}
+            onPress={() => setActiveTab('new_bill')}
+            activeOpacity={0.8}
           >
-            New Bill
-          </Text>
-        </TouchableOpacity>
+            <Ionicons
+              name={activeTab === 'new_bill' ? 'create' : 'create-outline'}
+              size={17}
+              color={activeTab === 'new_bill' ? '#ffffff' : '#64748b'}
+            />
+            <Text
+              style={[
+                styles.glassTabText,
+                activeTab === 'new_bill' && styles.glassTabTextActive,
+              ]}
+            >
+              New Bill
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'history' && styles.tabButtonActive]}
-          onPress={() => setActiveTab('history')}
-        >
-          <Ionicons
-            name={activeTab === 'history' ? 'time' : 'time-outline'}
-            size={18}
-            color={activeTab === 'history' ? '#2563eb' : '#64748b'}
-          />
-          <Text
-            style={[
-              styles.tabButtonText,
-              activeTab === 'history' && styles.tabButtonTextActive,
-            ]}
+          <TouchableOpacity
+            style={[styles.glassTabItem, activeTab === 'history' && styles.glassTabItemActive]}
+            onPress={() => setActiveTab('history')}
+            activeOpacity={0.8}
           >
-            History
-          </Text>
-        </TouchableOpacity>
+            <Ionicons
+              name={activeTab === 'history' ? 'time' : 'time-outline'}
+              size={17}
+              color={activeTab === 'history' ? '#ffffff' : '#64748b'}
+            />
+            <Text
+              style={[
+                styles.glassTabText,
+                activeTab === 'history' && styles.glassTabTextActive,
+              ]}
+            >
+              History
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'products' && styles.tabButtonActive]}
-          onPress={() => setActiveTab('products')}
-        >
-          <Ionicons
-            name={activeTab === 'products' ? 'pricetags' : 'pricetags-outline'}
-            size={18}
-            color={activeTab === 'products' ? '#2563eb' : '#64748b'}
-          />
-          <Text
-            style={[
-              styles.tabButtonText,
-              activeTab === 'products' && styles.tabButtonTextActive,
-            ]}
+          <TouchableOpacity
+            style={[styles.glassTabItem, activeTab === 'products' && styles.glassTabItemActive]}
+            onPress={() => setActiveTab('products')}
+            activeOpacity={0.8}
           >
-            Products
-          </Text>
-        </TouchableOpacity>
+            <Ionicons
+              name={activeTab === 'products' ? 'pricetags' : 'pricetags-outline'}
+              size={17}
+              color={activeTab === 'products' ? '#ffffff' : '#64748b'}
+            />
+            <Text
+              style={[
+                styles.glassTabText,
+                activeTab === 'products' && styles.glassTabTextActive,
+              ]}
+            >
+              Products
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Screen Content */}
@@ -169,7 +178,7 @@ function MainContent() {
       <TouchableOpacity
         style={[
           styles.floatingOrderBtn,
-          isLifted && styles.floatingOrderBtnLifted,
+          { bottom: safeBottomOffset },
         ]}
         onPress={() => setIsShopOrderVisible(true)}
         activeOpacity={0.85}
@@ -198,7 +207,7 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ffffff' }}>
-        <ActivityIndicator size="large" color="#2563eb" />
+        <ActivityIndicator size="large" color="#0f172a" />
       </View>
     );
   }
@@ -218,6 +227,13 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#ffffff',
+    ...(Platform.OS === 'web'
+      ? {
+          maxWidth: 500,
+          width: '100%',
+          alignSelf: 'center' as const,
+        }
+      : {}),
   },
   appHeader: {
     flexDirection: 'row',
@@ -238,7 +254,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -266,34 +282,50 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#0f172a',
   },
-  tabNav: {
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 12,
+  tabNavContainer: {
+    paddingHorizontal: 14,
     paddingVertical: 8,
+    backgroundColor: '#ffffff',
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
-    gap: 8,
+    borderBottomColor: '#f1f5f9',
   },
-  tabButton: {
+  glassTabBar: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(241, 245, 249, 0.88)',
+    borderRadius: 16,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(203, 213, 225, 0.65)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  glassTabItem: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 12,
     gap: 6,
   },
-  tabButtonActive: {
-    backgroundColor: '#eff6ff',
+  glassTabItemActive: {
+    backgroundColor: '#0f172a',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  tabButtonText: {
+  glassTabText: {
     fontSize: 13,
     fontWeight: '600',
     color: '#64748b',
   },
-  tabButtonTextActive: {
-    color: '#2563eb',
+  glassTabTextActive: {
+    color: '#ffffff',
     fontWeight: '700',
   },
   content: {
@@ -358,7 +390,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   errorRetryBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0f172a',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 12,
