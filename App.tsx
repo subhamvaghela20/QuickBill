@@ -8,14 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import { AppProvider, useApp } from './src/context/AppContext';
-import { NewBillScreen } from './src/screens/NewBillScreen';
-import { BillHistoryScreen } from './src/screens/BillHistoryScreen';
+import { AppProvider } from './src/context/AppContext';
+import { ShopOrderScreen } from './src/screens/ShopOrderScreen';
+import { OrderHistoryScreen } from './src/screens/OrderHistoryScreen';
 import { ProductsScreen } from './src/screens/ProductsScreen';
-import { ShopOrderModal } from './src/components/ShopOrderModal';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -63,19 +62,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-type Tab = 'new_bill' | 'history' | 'products';
+type Tab = 'new_order' | 'history' | 'products';
 
 function MainContent() {
-  const insets = useSafeAreaInsets();
-  const [activeTab, setActiveTab] = useState<Tab>('new_bill');
-  const [isShopOrderVisible, setIsShopOrderVisible] = useState(false);
-  const { activeDraftBillCount } = useApp();
-
-  // Lift floating button when bill bottom bar (Save Bill) is visible to prevent overlap
-  const isLifted = activeTab === 'new_bill' && activeDraftBillCount > 0;
-  const safeBottomOffset = isLifted
-    ? Math.max(insets.bottom, 16) + 88
-    : Math.max(insets.bottom, 16) + 24;
+  const [activeTab, setActiveTab] = useState<Tab>('new_order');
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
@@ -89,16 +79,16 @@ function MainContent() {
       <View style={styles.appHeader}>
         <View style={styles.brandRow}>
           <View style={styles.brandIcon}>
-            <Ionicons name="receipt" size={20} color="#ffffff" />
+            <Ionicons name="cart" size={20} color="#ffffff" />
           </View>
           <View>
             <Text style={styles.brandTitle}>QuickBill</Text>
-            <Text style={styles.brandSubtitle}>Fast Billing & Price Tracker</Text>
+            <Text style={styles.brandSubtitle}>Shop Order & Vendor Manager</Text>
           </View>
         </View>
 
         <View style={styles.currencyBadge}>
-          <Text style={styles.currencyText}>INR (₹)</Text>
+          <Text style={styles.currencyText}>Shop Order</Text>
         </View>
       </View>
 
@@ -106,22 +96,22 @@ function MainContent() {
       <View style={styles.tabNavContainer}>
         <View style={styles.glassTabBar}>
           <TouchableOpacity
-            style={[styles.glassTabItem, activeTab === 'new_bill' && styles.glassTabItemActive]}
-            onPress={() => setActiveTab('new_bill')}
+            style={[styles.glassTabItem, activeTab === 'new_order' && styles.glassTabItemActive]}
+            onPress={() => setActiveTab('new_order')}
             activeOpacity={0.8}
           >
             <Ionicons
-              name={activeTab === 'new_bill' ? 'create' : 'create-outline'}
+              name={activeTab === 'new_order' ? 'cart' : 'cart-outline'}
               size={17}
-              color={activeTab === 'new_bill' ? '#ffffff' : '#64748b'}
+              color={activeTab === 'new_order' ? '#ffffff' : '#64748b'}
             />
             <Text
               style={[
                 styles.glassTabText,
-                activeTab === 'new_bill' && styles.glassTabTextActive,
+                activeTab === 'new_order' && styles.glassTabTextActive,
               ]}
             >
-              New Bill
+              New Order
             </Text>
           </TouchableOpacity>
 
@@ -169,31 +159,10 @@ function MainContent() {
 
       {/* Screen Content */}
       <View style={styles.content}>
-        {activeTab === 'new_bill' && <NewBillScreen />}
-        {activeTab === 'history' && <BillHistoryScreen />}
+        {activeTab === 'new_order' && <ShopOrderScreen />}
+        {activeTab === 'history' && <OrderHistoryScreen />}
         {activeTab === 'products' && <ProductsScreen />}
       </View>
-
-      {/* Floating Action Button at Bottom for WhatsApp Shop Order */}
-      <TouchableOpacity
-        style={[
-          styles.floatingOrderBtn,
-          { bottom: safeBottomOffset },
-        ]}
-        onPress={() => setIsShopOrderVisible(true)}
-        activeOpacity={0.85}
-      >
-        <View style={styles.floatingIconBg}>
-          <Ionicons name="logo-whatsapp" size={18} color="#ffffff" />
-        </View>
-        <Text style={styles.floatingOrderText}>Order for Shop</Text>
-      </TouchableOpacity>
-
-      {/* Shop Order Modal */}
-      <ShopOrderModal
-        visible={isShopOrderVisible}
-        onClose={() => setIsShopOrderVisible(false)}
-      />
     </SafeAreaView>
   );
 }
@@ -331,42 +300,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  floatingOrderBtn: {
-    position: 'absolute',
-    bottom: 38,
-    right: 18,
-    backgroundColor: '#16a34a',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 30,
-    gap: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 8,
-    borderWidth: 1.5,
-    borderColor: '#ffffff',
-  },
-  floatingIconBg: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  floatingOrderText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '800',
-    letterSpacing: 0.2,
-  },
-  floatingOrderBtnLifted: {
-    bottom: 86,
   },
   errorFallbackContainer: {
     flex: 1,

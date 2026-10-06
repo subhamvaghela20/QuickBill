@@ -1,18 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Bill, BillItem, Product, ProductUnit, PurchaseOrder, PurchaseOrderItem } from '../types';
+import { Product, ProductUnit, PurchaseOrder, PurchaseOrderItem } from '../types';
 import {
-  findPreviousProductRate,
-  loadBills,
   loadProducts,
   loadPurchaseOrders,
-  saveBills,
   saveProducts,
   savePurchaseOrders,
 } from '../storage/storage';
 
 interface AppContextType {
   products: Product[];
-  bills: Bill[];
   purchaseOrders: PurchaseOrder[];
   loading: boolean;
   addProduct: (
@@ -26,8 +22,6 @@ interface AppContextType {
     updates: { name: string; category?: string; defaultRatePerKg?: number; unit?: ProductUnit }
   ) => Promise<Product>;
   deleteProduct: (id: string) => Promise<void>;
-  saveNewBill: (billData: { date: string; items: BillItem[]; notes?: string }) => Promise<Bill>;
-  deleteBill: (id: string) => Promise<void>;
   savePurchaseOrder: (orderData: {
     date: string;
     shopName?: string;
@@ -45,14 +39,6 @@ interface AppContextType {
   ) => Promise<PurchaseOrder>;
   deletePurchaseOrder: (id: string) => Promise<void>;
   clearProducts: () => Promise<void>;
-  activeDraftBillCount: number;
-  setActiveDraftBillCount: (count: number) => void;
-  getPreviousRate: (
-    productId?: string,
-    productName?: string,
-    beforeDate?: string,
-    excludeBillId?: string
-  ) => { previousRate: number; previousDate: string } | null;
   refreshData: () => Promise<void>;
 }
 
@@ -60,20 +46,16 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [bills, setBills] = useState<Bill[]>([]);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
-  const [activeDraftBillCount, setActiveDraftBillCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const refreshData = async () => {
     try {
-      const [loadedProducts, loadedBills, loadedOrders] = await Promise.all([
+      const [loadedProducts, loadedOrders] = await Promise.all([
         loadProducts(),
-        loadBills(),
         loadPurchaseOrders(),
       ]);
       setProducts(loadedProducts);
-      setBills(loadedBills);
       setPurchaseOrders(loadedOrders);
     } catch (err) {
       console.error('Failed to load data in AppProvider:', err);
@@ -103,7 +85,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       name: trimmed,
       category,
       defaultRatePerKg: defaultRate,
-      unit: unit || 'kg',
+      unit,
       lastUpdated: new Date().toISOString().split('T')[0],
     };
 
@@ -144,65 +126,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     await saveProducts(filtered);
   };
 
-  const saveNewBill = async (billData: {
-    date: string;
-    items: BillItem[];
-    notes?: string;
-  }): Promise<Bill> => {
-    const grandTotal = billData.items.reduce((sum, item) => sum + item.totalAmount, 0);
-    const totalWeightKg = billData.items.reduce((sum, item) => sum + item.quantityKg, 0);
-
-    const billId = 'bill_' + Date.now();
-    const billNumber = 'QB-' + Math.floor(1000 + Math.random() * 9000);
-
-    const newBill: Bill = {
-      id: billId,
-      billNumber,
-      date: billData.date,
-      items: billData.items,
-      grandTotal: Math.round(grandTotal * 100) / 100,
-      totalWeightKg: Math.round(totalWeightKg * 1000) / 1000,
-      createdAt: new Date().toISOString(),
-      notes: billData.notes,
-    };
-
-    const updatedBills = [newBill, ...bills];
-    setBills(updatedBills);
-    await saveBills(updatedBills);
-
-    // Also update any default rate for products that were in this bill
-    const updatedProducts = products.map((p) => {
-      const match = billData.items.find(
-        (it) => it.productId === p.id || it.productName.toLowerCase() === p.name.toLowerCase()
-      );
-      if (match && match.ratePerKg > 0) {
-        return {
-          ...p,
-          defaultRatePerKg: match.ratePerKg,
-          unit: match.unit || p.unit || 'kg',
-          lastUpdated: billData.date,
-        };
-      }
-      return p;
-    });
-    setProducts(updatedProducts);
-    await saveProducts(updatedProducts);
-
-    return newBill;
-  };
-
-  const deleteBill = async (id: string) => {
-    const filtered = bills.filter((b) => b.id !== id);
-    setBills(filtered);
-    await saveBills(filtered);
-  };
-
   const savePurchaseOrder = async (orderData: {
     date: string;
     shopName?: string;
     items: PurchaseOrderItem[];
     notes?: string;
-  }): Promise<PurchaseOrder> => {
+  }) => {
     const totalWeightKg = orderData.items.reduce((sum, item) => sum + item.quantityKg, 0);
     const orderId = 'po_' + Date.now();
     const orderNumber = 'PO-' + Math.floor(1000 + Math.random() * 9000);
@@ -267,34 +196,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     await saveProducts([]);
   };
 
-  const getPreviousRate = (
-    productId?: string,
-    productName?: string,
-    beforeDate?: string,
-    excludeBillId?: string
-  ) => {
-    return findPreviousProductRate(bills, productId, productName, beforeDate, excludeBillId);
-  };
-
   return (
     <AppContext.Provider
       value={{
         products,
-        bills,
         purchaseOrders,
         loading,
         addProduct,
         updateProduct,
         deleteProduct,
-        saveNewBill,
-        deleteBill,
         savePurchaseOrder,
         updatePurchaseOrder,
         deletePurchaseOrder,
         clearProducts,
-        activeDraftBillCount,
-        setActiveDraftBillCount,
-        getPreviousRate,
         refreshData,
       }}
     >

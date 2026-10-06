@@ -12,10 +12,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { Product, ProductUnit } from '../types';
-import { formatDate, formatINR, formatRateWithUnit } from '../utils/formatters';
+import { formatDate, formatINR, formatQuantityWithUnit, formatRateWithUnit } from '../utils/formatters';
 
 export const ProductsScreen: React.FC = () => {
-  const { products, bills, addProduct, updateProduct, deleteProduct, clearProducts } = useApp();
+  const { products, purchaseOrders, addProduct, updateProduct, deleteProduct, clearProducts } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [newProdName, setNewProdName] = useState('');
@@ -100,34 +100,29 @@ export const ProductsScreen: React.FC = () => {
     setAddModalVisible(false);
   };
 
-  // Find all historical bill occurrences of the inspected product
-  const getProductPriceHistory = (productId: string, productName: string) => {
-    const history: { date: string; billNumber: string; ratePerKg: number; diff: number }[] = [];
+  // Find all historical purchase order occurrences of the inspected product
+  const getProductOrderHistory = (productId: string, productName: string) => {
+    const history: { date: string; orderNumber: string; shopName?: string; quantityKg: number; unit?: ProductUnit }[] = [];
     const norm = productName.trim().toLowerCase();
 
-    // Sort bills ascending by date to show history chronologically
-    const sorted = [...bills].sort((a, b) => a.date.localeCompare(b.date));
-
-    let prevRate = 0;
-    sorted.forEach((bill) => {
-      const item = bill.items.find(
+    purchaseOrders.forEach((po) => {
+      const item = po.items.find(
         (it) =>
           it.productId === productId ||
           it.productName.trim().toLowerCase() === norm
       );
-      if (item && item.ratePerKg > 0) {
-        const diff = prevRate > 0 ? item.ratePerKg - prevRate : 0;
+      if (item) {
         history.push({
-          date: bill.date,
-          billNumber: bill.billNumber,
-          ratePerKg: item.ratePerKg,
-          diff,
+          date: po.date,
+          orderNumber: po.orderNumber,
+          shopName: po.shopName,
+          quantityKg: item.quantityKg,
+          unit: item.unit,
         });
-        prevRate = item.ratePerKg;
       }
     });
 
-    return history.reverse(); // Newest first
+    return history;
   };
 
   return (
@@ -221,13 +216,13 @@ export const ProductsScreen: React.FC = () => {
             <Ionicons name="basket-outline" size={48} color="#cbd5e1" />
             <Text style={styles.emptyTitle}>No Products in Catalog</Text>
             <Text style={styles.emptySubtitle}>
-              Your product catalog is empty. Tap "+ Add" above to add products, or add them on the fly while creating a bill.
+              Your product catalog is empty. Tap "+ Add" above to add products, or add them on the fly while creating an order.
             </Text>
           </View>
         }
       />
 
-      {/* Price History Trend Modal */}
+      {/* Order History Inspection Modal */}
       {inspectProduct && (
         <Modal
           visible={!!inspectProduct}
@@ -240,7 +235,7 @@ export const ProductsScreen: React.FC = () => {
               <View style={styles.trendHeader}>
                 <View>
                   <Text style={styles.trendTitle}>{inspectProduct.name}</Text>
-                  <Text style={styles.trendSubtitle}>Price Fluctuation History</Text>
+                  <Text style={styles.trendSubtitle}>Past Order History</Text>
                 </View>
                 <TouchableOpacity onPress={() => setInspectProduct(null)}>
                   <Ionicons name="close" size={24} color="#64748b" />
@@ -248,34 +243,31 @@ export const ProductsScreen: React.FC = () => {
               </View>
 
               <FlatList
-                data={getProductPriceHistory(inspectProduct.id, inspectProduct.name)}
+                data={getProductOrderHistory(inspectProduct.id, inspectProduct.name)}
                 keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={{ padding: 16 }}
                 renderItem={({ item }) => (
                   <View style={styles.trendRow}>
                     <View>
                       <Text style={styles.trendDate}>{formatDate(item.date)}</Text>
-                      <Text style={styles.trendBill}>Bill {item.billNumber}</Text>
+                      <Text style={styles.trendBill}>Order {item.orderNumber}</Text>
+                      {item.shopName ? (
+                        <Text style={{ fontSize: 11, color: '#64748b', marginTop: 1 }}>
+                          🏪 {item.shopName}
+                        </Text>
+                      ) : null}
                     </View>
                     <View style={{ alignItems: 'flex-end' }}>
-                      <Text style={styles.trendRate}>{formatINR(item.ratePerKg)}/kg</Text>
-                      {item.diff !== 0 && (
-                        <Text
-                          style={[
-                            styles.trendDiff,
-                            item.diff > 0 ? styles.diffUp : styles.diffDown,
-                          ]}
-                        >
-                          {item.diff > 0 ? `+${formatINR(item.diff)}/kg` : `${formatINR(item.diff)}/kg`}
-                        </Text>
-                      )}
+                      <Text style={{ fontSize: 14, fontWeight: '700', color: '#0f172a' }}>
+                        {formatQuantityWithUnit(item.quantityKg, item.unit)}
+                      </Text>
                     </View>
                   </View>
                 )}
                 ListEmptyComponent={
                   <View style={{ alignItems: 'center', paddingVertical: 24 }}>
                     <Text style={{ color: '#64748b' }}>
-                      No saved bills found containing this product yet.
+                      No saved purchase orders containing this product found yet.
                     </Text>
                   </View>
                 }
